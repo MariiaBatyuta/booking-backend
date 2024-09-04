@@ -1,6 +1,6 @@
 import User from "../models/userModel.js";
 import {userLoginSchema} from "../schema/userSchema.js";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 export const userLogin = async (req, res, next) => {
