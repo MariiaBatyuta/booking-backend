@@ -10,9 +10,9 @@ const jsonParser = express.json();
 infoRouter.get("/info", authMiddleware, getUserInfo);
 
 // change userName
-infoRouter.post("/name-change", authMiddleware, jsonParser, changeName);
+infoRouter.post("/edit", authMiddleware, jsonParser, changeName);
 
 // change photo
-infoRouter.post("/photo", authMiddleware, avatarMiddleware, changeUserPhoto);
+infoRouter.post("/edit-avatar", authMiddleware, avatarMiddleware, changeUserPhoto);
 
 export default infoRouter;

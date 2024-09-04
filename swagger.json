@@ -1,0 +1,409 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "1.0.0",
+    "title": "Booking project API",
+    "description": "API documentation for Booking Project",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "consumes": ["application/json", "multipart/form-data"],
+  "produces": ["application/json"],
+  "servers": [{ "url": "https://booking-backend-i22u.onrender.com/api" }],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authorization endpoints"
+    },
+    {
+      "name": "Google authorization",
+      "description": "Google authorization endpoint"
+    },
+    {
+      "name": "User",
+      "description": "User information endpoints"
+    },
+    {
+      "name": "Avatar",
+      "description": "User avatar endpoints"
+    }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User login",
+        "requestBody": {
+          "description": "Login object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login_Request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Login_Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "401": {
+            "description": "Email or password is wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User logout",
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Logout_Response"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Successful operation",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/user/info": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get user information",
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Get_User_Information"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/user/edit": {
+      "put": {
+        "tags": ["User"],
+        "summary": "Update user information",
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Update information object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User_Edit_Request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User_Edit_Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid update information",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {}
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/user/edit-avatar": {
+      "put": {
+        "tags": ["Avatar"],
+        "summary": "Update user avatar",
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Avatar upload object",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Edit_Avatar_Request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Edit_Avatar_Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No file uploaded",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/auth/google": {
+      "get": {
+        "tags": ["Google authorization"],
+        "summary": "Initiates Google OAuth flow",
+        "responses": {
+          "302": {
+            "description": "Redirects to Google OAuth consent screen"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/users/auth/google/callback": {
+      "get": {
+        "tags": ["Google authorization"],
+        "summary": "Callback endpoint for Google OAuth",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "Authorization code received from Google"
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirects to client application with access token"
+          },
+          "400": {
+            "description": "Bad request, authorization code not provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Login_Request": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 6,
+            "example": "123456"
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "Login_Response": {
+        "type": "object",
+        "properties": {
+           "_id": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string",
+            "example": "Alex"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Clare"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "token": {
+            "type": "string",
+            "example": "bkjk232323-wv22r23rvsd-2r2k2k3"
+          },
+          "photo": {
+            "type": "string",
+            "example": "https://test-photo.com"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Admin", "Owner"]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Logout_Response": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "Get_User_Information": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "example": "Alex"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Clare"
+          },
+          "photo": {
+            "type": "string",
+            "example": "https://test-photo.com"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Admin", "Owner"]
+          }
+        }
+      },
+      "User_Edit_Request": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "example": "Alex"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Clare"
+          }
+        }
+      },
+      "User_Edit_Response": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string",
+            "example": "Alex"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Clare"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "token": {
+            "type": "string",
+            "example": "bkjk232323-wv22r23rvsd-2r2k2k3"
+          },
+          "photo": {
+            "type": "string",
+            "example": "https://test-photo.com"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Admin", "Owner"]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+       "Edit_Avatar_Request": {
+        "type": "object",
+        "properties": {
+          "avatar": {
+            "type": "string",
+            "format": "binary"
+          }
+        },
+        "required": ["avatar"]
+      },
+      "Edit_Avatar_Response": {
+        "type": "object",
+        "properties": {
+          "avatar": {
+            "type": "string",
+            "example": "https://test-photo.com"
+          }
+        }
+    }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
