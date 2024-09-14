@@ -29,16 +29,14 @@ const userSchema = mongoose.Schema({
         default: null,
     },
     payment: {
-        lastFourDigits: { type: String },  
-        cardType: { type: String },        
-        cardExpiry: { type: String },     
-        cardholderName: { type: String },    
+        lastFourDigits: { type: String, default: null },  
+        cardType: { type: String, default: null },        
+        cardExpiry: { type: String, default: null },     
+        cardholderName: { type: String, default: null },    
     }
-    },
-    {
-        versionKey: false,
-        timestamp: true,
-    }
-);
+}, {
+    versionKey: false,
+    timestamps: true,
+});
 
 export default mongoose.model("User", userSchema);
