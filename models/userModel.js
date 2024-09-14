@@ -27,6 +27,12 @@ const userSchema = mongoose.Schema({
     token: {
         type: String,
         default: null,
+    },
+    payment: {
+        lastFourDigits: { type: String },  
+        cardType: { type: String },        
+        cardExpiry: { type: String },     
+        userName: { type: String },    
     }
     },
     {
