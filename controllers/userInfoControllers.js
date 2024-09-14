@@ -5,9 +5,9 @@ export const getUserInfo = async (req, res, next) => {
         const user = await User.findById(req.user.id);
         if (!user) return res.status(401).send({ message: "Not Authorized!" });
 
-        const { firstName, lastName, photo, status } = user;
+        const { firstName, lastName, photo, status, payment } = user;
 
-        res.status(200).send({ firstName, lastName, photo, status });
+        res.status(200).send({ firstName, lastName, photo, status, payment });
     } catch (error) {
         next(error);
     }
