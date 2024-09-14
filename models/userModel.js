@@ -32,12 +32,12 @@ const userSchema = mongoose.Schema({
         lastFourDigits: { type: String },  
         cardType: { type: String },        
         cardExpiry: { type: String },     
-        userName: { type: String },    
+        cardholderName: { type: String },    
     }
     },
     {
         versionKey: false,
-        Timestamp: true,
+        timestamp: true,
     }
 );
 
