@@ -4,8 +4,8 @@ import User from "../models/userModel.js";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const saveUserPayment = async (req, res, next) => {
-    const { paymentMethodId } = req.body;
-    if (!paymentMethodId) return res.status(404).send({ message: "Payment method didn't fount!" });
+    const { paymentMethodId, cardholderName } = req.body;
+    if (!paymentMethodId || !cardholderName) return res.status(404).send({ message: "Payment method didn't fount!" });
     
     try {
         const paymentMethod = await stripe.paymentMethods.retrieve(paymentMethodId);
@@ -18,7 +18,7 @@ export const saveUserPayment = async (req, res, next) => {
             lastFourDigits: paymentMethod.card.last4,
             cardType: paymentMethod.card.brand,
             cardExpiry: `${paymentMethod.card.exp_month}/${paymentMethod.card.exp_year}`,
-            cardholderName: paymentMethod.billing_details.name
+            cardholderName,
         };
         await user.save();
 
