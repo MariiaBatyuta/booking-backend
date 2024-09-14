@@ -18,7 +18,7 @@ export const saveUserPayment = async (req, res, next) => {
             lastFourDigits: paymentMethod.card.last4,
             cardType: paymentMethod.card.brand,
             cardExpiry: `${paymentMethod.card.exp_month}/${paymentMethod.card.exp_year}`,
-            userName: paymentMethod.billing_details.name
+            cardholderName: paymentMethod.billing_details.name
         };
         await user.save();
 
